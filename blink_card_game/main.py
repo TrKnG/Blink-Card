@@ -4,6 +4,7 @@ import json
 import socket
 from threading import Thread
 from tkinter import messagebox
+
 def kontrol():
     global card1_state, card2_state, card3_state, card4_state
     if card1_state == "back" or card2_state == "back":
@@ -30,6 +31,7 @@ def kontrol():
                 card4_label.config(image=cardback_img)
                 card2_state = "back"
                 card4_state = "back"
+
 def check_blink_strength():
     host = "127.0.0.1"
     port = 13854
@@ -102,7 +104,7 @@ def check_blink_strength():
                             card3_label.config(image=cardselect_img)
                             selected_card = 2
                         elif card3_state == "front" and card2_state == "front":
-                            selected_card = 2  # buraya bak
+                            selected_card = 2
                         elif card3_state == "front" and card2_state == "back":
                             card2_label.config(image=cardback_img)
                             selected_card = 2
@@ -140,35 +142,41 @@ def check_blink_strength():
                         selected_card = 0
                     print(selected_card)
 
-
+# Ana pencere oluştur
 root = tk.Tk()
 root.title("Blink Card Game")
+root.config(bg="#f0f0f0")  # Arka plan rengi
 
-strength_label = tk.Label(root, text="Göz Kırpma Gücü: ")
+# Göz kırpma gücü metni için etiket oluştur
+strength_label = tk.Label(root, text="Göz Kırpma Gücü: ", font=("Arial", 12))
 strength_label.pack()
 
+# Kartlar için görüntüler yükle
 cardback_img = ImageTk.PhotoImage(Image.open("arka.png"))
 cardselect_img = ImageTk.PhotoImage(Image.open("ön.png"))
 card1_img = ImageTk.PhotoImage(Image.open("kupa.png"))
 card2_img = ImageTk.PhotoImage(Image.open("maça.png"))
 
-card_frame = tk.Frame(root)
-card_frame.pack()
+# Kartları içeren çerçeve oluştur
+card_frame = tk.Frame(root, bg="#f0f0f0")
+card_frame.pack(pady=10)
 
-card1_label = tk.Label(card_frame, image=cardback_img)
-card1_label.pack(side="left")
+# Kart etiketlerini oluştur ve çerçeve içine yerleştir
+card1_label = tk.Label(card_frame, image=cardback_img, borderwidth=2, relief="solid")
+card1_label.pack(side="left", padx=5)
+card2_label = tk.Label(card_frame, image=cardback_img, borderwidth=2, relief="solid")
+card2_label.pack(side="left", padx=5)
+card4_label = tk.Label(card_frame, image=cardback_img, borderwidth=2, relief="solid")
+card4_label.pack(side="right", padx=5)
+card3_label = tk.Label(card_frame, image=cardback_img, borderwidth=2, relief="solid")
+card3_label.pack(side="right", padx=5)
 
-card2_label = tk.Label(card_frame, image=cardback_img)
-card2_label.pack(side="left")
-
-card4_label = tk.Label(card_frame, image=cardback_img)
-card4_label.pack(side="right")
-
-card3_label = tk.Label(card_frame, image=cardback_img)
-card3_label.pack(side="right")
-
-result_label = tk.Label(root, text="")
+# Sonuç metni için etiket oluştur
+result_label = tk.Label(root, text="", font=("Arial", 12))
 result_label.pack()
+
+# Göz kırpma gücünü kontrol etmek için bir thread başlat
 Thread(target=check_blink_strength).start()
 
+# Ana döngüyü başlat
 root.mainloop()
